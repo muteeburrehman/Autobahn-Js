@@ -1,60 +1,40 @@
 <template>
   <div>
-    <h1>WAMP Dashboard</h1>
-    <div v-if="connected">
-      <p>Status: Connected to WAMP Router</p>
-      <p>Message: {{ message }}</p>
-    </div>
-    <div v-else>
-      <p>Status: Disconnected from WAMP Router</p>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <router-link class="navbar-brand" to="/">Dashboard</router-link>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link class="nav-link" to="/home">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/analytics">Analytics</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/settings">Settings</router-link>
+            </li>
+            <!-- Add more navigation links as needed -->
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
 </template>
 
 <script>
-import autobahn from 'autobahn-browser';
-
 export default {
-  data() {
-    return {
-      connected: false,
-      message: 'Connected Successfully',
-      session: null,
-    };
-  },
-  created() {
-    const url = 'ws://localhost:8081/ws';
-    const realm = 'realm1';
-    const connection = new autobahn.Connection({
-      url,
-      realm,
-    });
-
-    connection.onopen = (session, details) => {
-      this.session = session;
-      this.connected = true;
-      console.log('session created', this.session);
-
-      session.subscribe('com.example.topic1', (args) => {
-        this.message = args[0];
-        console.log('Session subscribed');
-      });
-
-      session.publish('com.example.topic1', ['Vue Js']);
-      console.log('WAMP session opened:', session, details);
-    };
-
-    connection.onclose = (reason) => {
-      this.connected = false;
-      console.log(reason);
-    };
-
-    connection.open();
-  },
-  beforeUnmount() {
-    if (this.session) {
-      this.session.close();
-    }
-  }
+  name: 'DashBoard'
 };
 </script>

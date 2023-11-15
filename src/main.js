@@ -9,10 +9,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeComp from './components/HomeComp.vue';
 import AnalyticsComp from './components/AnalyticsComp.vue';
 import SettingsComp from './components/SettingsComp.vue';
+import DashBoard from "@/components/DashBoard.vue";
 
 
 
 const routes = [
+    {path: '/', component: DashBoard},
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp }

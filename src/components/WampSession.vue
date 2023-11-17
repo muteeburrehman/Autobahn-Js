@@ -1,23 +1,16 @@
-
+<!-- WampSession.vue -->
 <template>
   <div class="wamp-style d-flex flex-column align-items-center mt-4">
     <h1>WAMP Dashboard</h1>
 
     <div class="mb-3">
-      <button  v-if="!connection" @click="createConnection" class="btn btn-primary me-2">Create Connection</button>
-
       <!-- Show the input and button only when connected -->
       <div v-if="connected" class="mt-2">
-        <label v-if="!emailEntered" for="email">Email:</label>
-        <input v-if="!emailEntered" v-model="email" type="text" id="email" class="form-control mb-2" placeholder="Enter email" />
+        <label for="email">Email:</label>
+        <input v-model="email" type="text" id="email" class="form-control mb-2" placeholder="Enter email" />
 
         <!-- Button to submit email -->
-        <button v-if="!emailEntered" @click="enterEmail" class="btn btn-secondary mb-2 me-2 mt-2">Enter Email</button>
-
-        <!-- Show email entered alert only when email is entered -->
-<!--        <div v-if="emailEntered" class="alert alert-success mb-2">-->
-<!--          Email entered successfully!-->
-<!--        </div>-->
+        <router-link :to="{ name: 'CreateAccountPage' }" class="btn btn-secondary mb-2 me-2 mt-2">Create an Account</router-link>
 
         <button @click="getData" class="btn btn-success">Get Data</button>
       </div>
@@ -28,7 +21,7 @@
       <p>Message: {{ message }}</p>
     </div>
     <div v-else>
-      <p>Status: Disconnected from WAMP Router</p>
+      <p>Status: {{ connectionError ? 'Error in establishing connection' : 'Disconnected from WAMP Router' }}</p>
     </div>
 
     <div v-if="dataResult">
@@ -45,12 +38,12 @@ export default {
   data() {
     return {
       connected: false,
-      message: 'Connected Successfully',
+      connectionError: false,
+      message: '',
       session: null,
       dataResult: null,
-      email: '', // Add email property
-      emailEntered: false, // Track if email is entered
-      connection:false
+      email: '',
+      emailEntered: false,
     };
   },
   methods: {
@@ -65,7 +58,6 @@ export default {
       connection.onopen = (session, details) => {
         this.session = session;
         this.connected = true;
-        this.connection = true;// for removing create connection button after clicking
         this.message = 'Connected Successfully';
         console.log('Session created', this.session);
         console.log('WAMP session opened:', session, details);
@@ -73,22 +65,18 @@ export default {
 
       connection.onclose = (reason) => {
         this.connected = false;
+        this.connectionError = true;
         this.message = 'Connection Closed';
-
-        console.log(reason);
+        console.error(reason);
       };
 
       connection.open();
     },
 
-    enterEmail() {
+    getData() {
       if (this.email.trim() !== '') {
         this.emailEntered = true;
-
       }
-    },
-
-    getData() {
       if (this.session && this.emailEntered) {
         this.session.call('pk.codebase.account.get', [this.email.trim()]).then((res) => {
           console.log('Received data:', res);
@@ -98,11 +86,15 @@ export default {
     },
   },
 
-  beforeUnmount() {
-    if (this.session) {
-      this.session.close();
-    }
+  created() {
+    this.createConnection();
   },
+
+  // beforeUnmount() {
+  //   if (this.session) {
+  //     this.session.close();
+  //   }
+  // },
 };
 </script>
 

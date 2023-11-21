@@ -11,16 +11,18 @@ import WampSession from "@/components/GetData.vue";
 import CreateAccount from "@/components/CreateAccount.vue";
 import store from '@/store.js';
 import GetData from "@/components/GetData.vue";
-import DeleteAccount from "@/components/DeleteAccount.vue"; // Import your store
+import DeleteAccount from "@/components/DeleteAccount.vue";
+import UpdateData from "@/components/UpdateData.vue"; // Import your store
 
 const routes = [
     { path: '/', component: WampSession },
+    {path:'/update-data',name:'update-data',component: UpdateData},
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp },
     {path: '/getData' , name: 'GetDataPage', component: GetData, props: true},
     { path: '/create-account', name: 'CreateAccountPage', component: CreateAccount, props: true },
-    { path: '/delete-account', name:'DeleteAccountPage', component: DeleteAccount, props: true},
+    { path: '/delete-account', name:'delete-account', component: DeleteAccount, props: true},
     { path: '/:catchAll(.*)', redirect: '/' }, // Redirect any unknown routes to the home page
 ];
 

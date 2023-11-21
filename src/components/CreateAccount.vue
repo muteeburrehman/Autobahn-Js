@@ -41,11 +41,12 @@
 <script>
 import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
-  setup(props) {
-    console.log(props);
+  setup() {
     const store = useStore();
+    const router = useRouter();
 
     const accountData = ref({
       fullname: '',
@@ -61,12 +62,12 @@ export default {
     const errorMessage = ref('');
 
     const createAccount = async () => {
-      fullnameError.value = ''; // Clear previous full name error
-      emailError.value = ''; // Clear previous email error
-      ageError.value = ''; // Clear previous age error
-      accountCreated.value = false; // Reset account creation status
-      errorMessage.value = ''; // Clear previous error message
-      showErrorMessage.value = false; // Hide the error message
+      fullnameError.value = '';
+      emailError.value = '';
+      ageError.value = '';
+      accountCreated.value = false;
+      errorMessage.value = '';
+      showErrorMessage.value = false;
 
       if (!store.state.connected) {
         errorMessage.value = 'No session available. Please ensure you are connected.';
@@ -87,6 +88,10 @@ export default {
         const res = await store.state.session.call('pk.codebase.account.create', [fullname, age, email]);
         console.log('Account created successfully:', res);
         accountCreated.value = true;
+
+        // Redirect to GetDataPage after successfully creating an account
+        router.push({ name: 'show-users' });
+
       } catch (error) {
         if (error.error === 'AccountAlreadyExistsError') {
           errorMessage.value = 'Account with this email already exists.';
@@ -109,7 +114,6 @@ export default {
     };
 
     const validateEmail = () => {
-      // Regular expression for basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!accountData.value.email.trim()) {
@@ -134,10 +138,8 @@ export default {
       }
     };
 
-    // Watch for changes in the session state
     watch(() => store.state.connected, (newConnected) => {
       if (!newConnected) {
-        // Reset the component state when disconnected
         fullnameError.value = '';
         emailError.value = '';
         ageError.value = '';
@@ -163,7 +165,6 @@ export default {
 </script>
 
 <style scoped>
-/* Add your styles here if needed */
 .is-invalid {
   border-color: #dc3545;
 }

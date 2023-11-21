@@ -37,10 +37,12 @@
 <script>
 import { ref, watch } from "vue";
 import { useStore } from "vuex";
-
+import { useRouter } from 'vue-router';
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter(); // Initialize router
+
     const accountData = ref({
       email: '',
     });
@@ -69,6 +71,9 @@ export default {
         const res = await store.state.session.call('pk.codebase.account.delete', [email]);
         console.log('Account deleted successfully', res);
         accountDeleted.value = true;
+
+        // Redirect to ShowUsersPage after successfully creating an account
+        router.push({ name: 'show-users' });
       } catch (error) {
         console.error('Error deleting account:', error);
         errorMessage.value = 'Error deleting account. Please try again.';

@@ -41,11 +41,11 @@
 <script>
 import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
-
+import { useRouter } from 'vue-router';
 export default {
   setup() {
     const store = useStore();
-
+    const router = useRouter(); // Initialize router
     const accountData = ref({
       fullname: '',
       age: null,
@@ -86,6 +86,9 @@ export default {
         const res = await store.state.session.call('pk.codebase.account.update', [email, fullname, age]);
         console.log('Account updated successfully:', res);
         accountUpdated.value = true;
+
+        // Redirect to ShowUsersPage after successfully creating an account
+        router.push({ name: 'show-users' });
       } catch (error) {
         errorMessage.value = 'Error updating account. Please try again.';
         showErrorMessage.value = true;

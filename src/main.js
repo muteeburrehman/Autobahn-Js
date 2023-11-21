@@ -7,21 +7,22 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeComp from "@/components/HomeComp.vue";
 import AnalyticsComp from "@/components/AnalyticsComp.vue";
 import SettingsComp from "@/components/SettingsComp.vue";
-import WampSession from "@/components/GetData.vue";
+
 import CreateAccount from "@/components/CreateAccount.vue";
 import store from '@/store.js';
 import GetData from "@/components/GetData.vue";
 import DeleteAccount from "@/components/DeleteAccount.vue";
-import UpdateData from "@/components/UpdateData.vue"; // Import your store
+import UpdateData from "@/components/UpdateData.vue";
+import ShowUsers from "@/components/ShowUsers.vue"; // Import your store
 
 const routes = [
-    { path: '/', component: WampSession },
+    { path: '/', name:'show-users', component: ShowUsers },
     {path:'/update-data',name:'update-data',component: UpdateData},
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp },
-    {path: '/getData' , name: 'GetDataPage', component: GetData, props: true},
-    { path: '/create-account', name: 'CreateAccountPage', component: CreateAccount, props: true },
+    {path: '/getData' , name: 'get-data', component: GetData, props: true},
+    { path: '/create-account', name: 'create-account', component: CreateAccount, props: true },
     { path: '/delete-account', name:'delete-account', component: DeleteAccount, props: true},
     { path: '/:catchAll(.*)', redirect: '/' }, // Redirect any unknown routes to the home page
 ];

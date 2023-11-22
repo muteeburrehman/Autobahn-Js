@@ -39,15 +39,13 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-
 export default {
   setup() {
     const store = useStore();
-    const router = useRouter();
+    const router = useRouter(); // Initialize router
     const accountData = ref({
       fullname: '',
       age: null,
@@ -60,22 +58,6 @@ export default {
     const accountUpdated = ref(false);
     const showErrorMessage = ref(false);
     const errorMessage = ref('');
-
-    const fetchUserData = async () => {
-      const user = router.currentRoute.value.state?.user;
-
-      if (user) {
-        accountData.value = {
-          fullname: user.fullname,
-          age: user.age,
-          email: user.email,
-        };
-      }
-    };
-
-    onMounted(() => {
-      fetchUserData();
-    });
 
     const updateAccount = async () => {
       fullnameError.value = '';
@@ -100,12 +82,12 @@ export default {
       try {
         const { fullname, age, email } = accountData.value;
 
-        // Axios call for updating an account
-        const res = await axios.put(`your_api_endpoint/${email}`, { fullname, age });
-        console.log('Account updated successfully:', res.data);
+        // WAMP call for updating an account
+        const res = await store.state.session.call('pk.codebase.account.update', [email, fullname, age]);
+        console.log('Account updated successfully:', res);
         accountUpdated.value = true;
 
-        // Redirect to ShowUsersPage after successfully updating an account
+        // Redirect to ShowUsersPage after successfully creating an account
         router.push({ name: 'show-users' });
       } catch (error) {
         errorMessage.value = 'Error updating account. Please try again.';
@@ -113,6 +95,7 @@ export default {
         console.error('Error updating account:', error);
       }
     };
+
     const validateEmail = () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -169,7 +152,6 @@ export default {
       errorMessage,
       updateAccount,
       store,
-      fetchUserData,
     };
   },
 };

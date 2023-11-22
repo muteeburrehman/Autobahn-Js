@@ -9,29 +9,41 @@
           <table class="table">
             <thead>
             <tr>
+              <th>ID</th>
               <th>Full Name</th>
               <th>Email</th>
               <th>Age</th>
-              <th>Actions</th>
+              <th class="text-center">Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="user in users" :key="user.id">
+              <td class="align-middle">{{ user.id }}</td>
               <td class="align-middle">{{ user.fullname }}</td>
-              <td class="align-middle">{{ user.email }}</td>
-              <td class="align-middle">{{ user.age }}</td>
               <td class="align-middle">
+                <!-- Use a div or span as a wrapper for the router-link -->
+                <div>
+                  <router-link :to="{ name: 'get-data', params: { id: user.id } }">
+                    {{ user.email }}
+                  </router-link>
+
+
+
+                </div>
+              </td>
+              <td class="align-middle">{{ user.age }}</td>
+              <td class="align-middle text-center">
                 <div class="btn-group" role="group">
                   <!-- Pass user data to the update form using props -->
                   <router-link
                       :to="{ name: 'update-data', params: { id: user.id }}"
-                      class="btn btn-warning mx-2"
+                      class="btn btn-warning btn-sm mx-2"
                   >
                     Edit
                   </router-link>
                   <router-link
                       :to="{ name: 'delete-account', params: { id: user.id } }"
-                      class="btn btn-primary mx-2"
+                      class="btn btn-primary btn-sm mx-2"
                   >
                     Delete
                   </router-link>
@@ -42,12 +54,16 @@
           </table>
         </div>
 
-        <router-link to="/create-account" class="btn btn-primary mt-3">Create Account</router-link>
+        <div class="d-flex justify-content-center">
+          <router-link to="/create-account" class="btn btn-primary mt-3">Add new user</router-link>
+        </div>
+
+
+
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { ref, onMounted, watch } from 'vue';

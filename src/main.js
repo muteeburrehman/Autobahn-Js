@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createRouter, createWebHistory } from 'vue-router';
-// import axios from 'axios'; // Import Axios library
+
 import HomeComp from "@/components/HomeComp.vue";
 import AnalyticsComp from "@/components/AnalyticsComp.vue";
 import SettingsComp from "@/components/SettingsComp.vue";
@@ -17,13 +17,14 @@ import ShowUsers from "@/components/ShowUsers.vue"; // Import your store
 
 const routes = [
     { path: '/', name:'show-users', component: ShowUsers },
-    { path:'/edit',name:'update-data',component: UpdateData },
+    { path:'/edit/:id',name:'update-data',component: UpdateData },
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp },
-    {path: '/getData' , name: 'get-data', component: GetData, props: true},
+    { name: 'get-data', path: '/get-data/:id', component: GetData, props: true },
+
     { path: '/create-account', name: 'create-account', component: CreateAccount, props: true },
-    { path: '/delete-account', name:'delete-account', component: DeleteAccount, props: true},
+    { path: '/delete-account/:id', name:'delete-account', component: DeleteAccount, props: true},
     { path: '/:catchAll(.*)', redirect: '/' }, // Redirect any unknown routes to the home page
 ];
 
@@ -36,8 +37,6 @@ const app = createApp(App);
 
 app.use(router);
 
-// // Set up Axios globally
-// app.config.globalProperties.$axios = axios;
 // Provide the store to all components
 app.provide('store', store);
 

@@ -1,6 +1,9 @@
 <template>
   <div class="container mt-5">
 
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">User Detail:</h3>
 
     <div class="mb-3">
       <label for="email" class="form-label">Email:</label>
@@ -12,7 +15,7 @@
     </div>
 
     <div v-if="dataResult" class="mt-4">
-      <h3>Data Result:</h3>
+      <h3> Details: </h3>
       <!-- Display data result here -->
       <pre class="bg-light p-3">{{ dataResult }}</pre>
     </div>
@@ -22,6 +25,9 @@
       <div class="text-danger">{{ errorMessage }}</div>
     </div>
   </div>
+      </div>
+  </div>
+
 </template>
 
 <script>

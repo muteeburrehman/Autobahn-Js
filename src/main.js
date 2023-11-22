@@ -3,7 +3,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createRouter, createWebHistory } from 'vue-router';
-
+// import axios from 'axios'; // Import Axios library
 import HomeComp from "@/components/HomeComp.vue";
 import AnalyticsComp from "@/components/AnalyticsComp.vue";
 import SettingsComp from "@/components/SettingsComp.vue";
@@ -17,7 +17,7 @@ import ShowUsers from "@/components/ShowUsers.vue"; // Import your store
 
 const routes = [
     { path: '/', name:'show-users', component: ShowUsers },
-    {path:'/update-data',name:'update-data',component: UpdateData},
+    { path:'/edit',name:'update-data',component: UpdateData },
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp },
@@ -36,6 +36,8 @@ const app = createApp(App);
 
 app.use(router);
 
+// // Set up Axios globally
+// app.config.globalProperties.$axios = axios;
 // Provide the store to all components
 app.provide('store', store);
 

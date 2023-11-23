@@ -32,9 +32,8 @@ export default {
   setup() {
     // const store = inject('store');
     const store = useStore()
+    const users = ref([]); // Declare 'users' here
 
-
-    const users = ref([]);
     const createConnection = () => {
       const url = 'ws://localhost:8081/ws';
       const realm = 'realm1';
@@ -44,7 +43,7 @@ export default {
       });
 
       connection.onopen = (newSession, details) => {
-        store.mutations.setSession(newSession); // Access mutations via store
+        store.commit('setSession', newSession); // Use commit to access mutations
         console.log('Session created', newSession);
         console.log('WAMP session opened:', newSession, details);
 
@@ -59,6 +58,7 @@ export default {
 
       connection.open();
     };
+
 
     const fetchUserData = async () => {
       try {

@@ -21,20 +21,18 @@
               <td class="align-middle">{{ user.id }}</td>
               <td class="align-middle">{{ user.fullname }}</td>
               <td class="align-middle">
-                <!-- Use a div or span as a wrapper for the router-link -->
                 <div>
-                  <router-link :to="{ name: 'get-data', params: { id: user.id } }">
+                  <router-link
+                      :to="{ name: 'get-data', params: { email: user.email } }"
+                      @click="handleUserClick(user.email)"
+                  >
                     {{ user.email }}
                   </router-link>
-
-
-
                 </div>
               </td>
               <td class="align-middle">{{ user.age }}</td>
               <td class="align-middle text-center">
                 <div class="btn-group" role="group">
-                  <!-- Pass user data to the update form using props -->
                   <router-link
                       :to="{ name: 'update-data', params: { id: user.id }}"
                       class="btn btn-warning btn-sm mx-2"
@@ -57,9 +55,6 @@
         <div class="d-flex justify-content-center">
           <router-link to="/create-account" class="btn btn-primary mt-3">Add new user</router-link>
         </div>
-
-
-
       </div>
     </div>
   </div>
@@ -68,10 +63,12 @@
 <script>
 import { ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
     const users = ref([]);
 
     const fetchUserData = async () => {
@@ -83,6 +80,11 @@ export default {
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
+    };
+
+    const handleUserClick = (email) => {
+      store.dispatch('setClickedEmail', email);
+      router.push({ name: 'get-data', params: { email } });
     };
 
     onMounted(() => {
@@ -98,6 +100,7 @@ export default {
 
     return {
       users,
+      handleUserClick,
     };
   },
 };

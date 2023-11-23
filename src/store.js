@@ -1,19 +1,23 @@
-// store.js
-import { reactive } from 'vue';
+import { createStore } from 'vuex';
 
-const state = reactive({
-    session: null,
-    connected: false,
-});
-
-const mutations = {
-    setSession(newSession) {
-        state.session = newSession;
-        state.connected = true;
+export default createStore({
+    state: {
+        session: null,
+        connected: false,
+        clickedEmail: null,
     },
-};
-
-export default {
-    state,
-    mutations,
-};
+    mutations: {
+        setSession(state, newSession) {
+            state.session = newSession;
+            state.connected = true;
+        },
+        setClickedEmail(state, email) {
+            state.clickedEmail = email;
+        },
+    },
+    actions: {
+        setClickedEmail({ commit }, email) {
+            commit('setClickedEmail', email);
+        },
+    },
+});

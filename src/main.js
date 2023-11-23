@@ -21,7 +21,7 @@ const routes = [
     { path: '/home', component: HomeComp },
     { path: '/analytics', component: AnalyticsComp },
     { path: '/settings', component: SettingsComp },
-    { name: 'get-data', path: '/get-data/:id', component: GetData, props: true },
+    { name: 'get-data', path: '/get-data/:email', component: GetData, props: true },
 
     { path: '/create-account', name: 'create-account', component: CreateAccount, props: true },
     { path: '/delete-account/:id', name:'delete-account', component: DeleteAccount, props: true},

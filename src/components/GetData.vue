@@ -1,15 +1,23 @@
 <template>
   <div class="container mt-5">
-    <div class="card">
+    <div class="card" @mouseover="isHovered = true" @mouseleave="isHovered = false" :class="{ 'hovered': isHovered }">
       <div class="card-body">
         <h3 class="card-title">User Detail:</h3>
 
         <div v-if="dataResult">
-          <h3>Details:</h3>
-          <div class="user-details">
-            <div><strong>Email:</strong> {{ dataResult.email }}</div>
-            <div><strong>Full Name:</strong> {{ dataResult.fullname }}</div>
-            <div><strong>Age:</strong> {{ dataResult.age }}</div>
+          <div class="user-details text-white">
+            <div class="mb-3">
+              <strong class="detail-label text-white">Email:</strong>
+              {{ dataResult.email }}
+            </div>
+            <div class="mb-3">
+              <strong class="detail-label text-white">Full Name:</strong>
+              {{ dataResult.fullname }}
+            </div>
+            <div class="mb-3">
+              <strong class="detail-label text-white">Age:</strong>
+              {{ dataResult.age }}
+            </div>
             <!-- Add more details as needed -->
           </div>
         </div>
@@ -23,12 +31,15 @@
   </div>
 </template>
 
+
+
 <script>
 import { ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 
 export default {
   setup() {
+    const isHovered = ref(false)
     const dataResult = ref(null);
     const errorMessage = ref(null);
     const store = useStore();
@@ -82,16 +93,70 @@ export default {
     return {
       dataResult,
       errorMessage,
+      isHovered
     };
   },
 };
 </script>
 
+
+
 <style scoped>
+.container {
+  max-width: 600px;
+}
+
+.card {
+  border: 2px solid #3498db;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+  background-color: #2c3e50;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+  background-color: #34495e;
+  transform: scale(1.02); /* Scale up on hover */
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  color: #3498db;
+  font-family: 'Roboto', sans-serif; /* Use a suitable font */
+}
+
 .user-details {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 15px;
+  border: 1px solid #2c3e50;
+  border-radius: 8px;
+  background-color: #34495e;
+  transition: transform 0.3s ease; /* Smooth transition for details */
+}
+
+.user-details strong {
+  font-weight: bold;
+  color: #3498db;
+}
+
+.detail-label {
+  display: inline-block;
+  width: 100px;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.hovered {
+  background-color: #34495e !important;
+  cursor: pointer;
+}
+
+/* Additional styles for icons or cursor indicators */
+.card:hover {
+  cursor: pointer;
 }
 </style>

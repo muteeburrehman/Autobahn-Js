@@ -39,13 +39,14 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+
 export default {
   setup() {
     const store = useStore();
-    const router = useRouter(); // Initialize router
+    const router = useRouter();
     const accountData = ref({
       fullname: '',
       age: null,
@@ -58,6 +59,31 @@ export default {
     const accountUpdated = ref(false);
     const showErrorMessage = ref(false);
     const errorMessage = ref('');
+
+    // Use computed to get the email parameter from the route
+    const userEmail = computed(() => router.currentRoute.value.params.email);
+
+    const getUserData = async (email) => {
+      try {
+        // Check if store.state.session is defined before making the API call
+        if (!store.state.session) {
+          console.error('Session is not initialized. Please try again later.');
+          return;
+        }
+
+        // Make the API call to get user data based on the email parameter
+        const res = await store.state.session.call('pk.codebase.account.get', [email.trim()]);
+
+        // Update accountData with the received data
+        accountData.value = {
+          fullname: res.fullname,
+          age: res.age,
+          email: res.email,
+        };
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
     const updateAccount = async () => {
       fullnameError.value = '';
@@ -131,6 +157,11 @@ export default {
       }
     };
 
+    // Use onMounted instead of the mounted lifecycle hook
+    onMounted(() => {
+      // Call getUserData with the computed userEmail
+      getUserData(userEmail.value);
+    });
     watch(() => store.state.connected, (newConnected) => {
       if (!newConnected) {
         fullnameError.value = '';
@@ -151,6 +182,7 @@ export default {
       showErrorMessage,
       errorMessage,
       updateAccount,
+      userEmail,
       store,
     };
   },
@@ -165,3 +197,4 @@ export default {
   color: #dc3545;
 }
 </style>
+

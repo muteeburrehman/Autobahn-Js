@@ -33,18 +33,16 @@
               <td class="align-middle">{{ user.age }}</td>
               <td class="align-middle text-center">
                 <div class="btn-group" role="group">
-                  <router-link
-                      :to="{ name: 'update-data', params: { id: user.id }}"
-                      class="btn btn-warning btn-sm mx-2"
-                  >
+                  <button @click="handleUserClickTwo(user.email)" class="btn btn-warning btn-sm mx-2">
                     Edit
-                  </router-link>
-                  <router-link
-                      :to="{ name: 'delete-account', params: { id: user.id } }"
+                  </button>
+                  <button
+
+                      @click="deleteUser(user.email)"
                       class="btn btn-primary btn-sm mx-2"
                   >
                     Delete
-                  </router-link>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -82,6 +80,25 @@ export default {
       }
     };
 
+    const deleteUser = async (email) => {
+      try {
+        if (store.state.connected){
+
+          const response = await store.state.session.call('pk.codebase.account.delete',[email]);
+          console.log('User:',response);
+          fetchUserData();
+          console.log(users)
+        }
+      } catch (error){
+        console.error('Error fetching data: ', error )
+      }
+    }
+    // Modify handleUserClick to navigate to the update-data route with the user's email
+    const handleUserClickTwo = (email) => {
+      store.dispatch('setClickedEmail', email);
+      router.push({ name: 'update-data', params: { email } });
+    };
+
     const handleUserClick = (email) => {
       store.dispatch('setClickedEmail', email);
       router.push({ name: 'get-data', params: { email } });
@@ -101,6 +118,8 @@ export default {
     return {
       users,
       handleUserClick,
+      handleUserClickTwo,
+      deleteUser
     };
   },
 };

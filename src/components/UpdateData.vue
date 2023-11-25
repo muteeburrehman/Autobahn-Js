@@ -4,26 +4,24 @@
       <div class="card-body">
         <h3 class="card-title">Update Account</h3>
 
-        <div class="mb-3">
-          <label for="email" class="form-label">Email:</label>
-          <input v-model="accountData.email" type="text" id="email" class="form-control" :class="{ 'is-invalid': emailError }" placeholder="Enter email" />
-          <div v-if="emailError" class="invalid-feedback">{{ emailError }}</div>
-        </div>
-
+        <!-- Full Name -->
         <div class="mb-3">
           <label for="fullname" class="form-label">Full Name:</label>
           <input v-model="accountData.fullname" type="text" id="fullname" class="form-control" :class="{ 'is-invalid': fullnameError }" placeholder="Enter full name" />
           <div v-if="fullnameError" class="invalid-feedback">{{ fullnameError }}</div>
         </div>
 
+        <!-- Age -->
         <div class="mb-3">
           <label for="age" class="form-label">Age:</label>
           <input v-model="accountData.age" type="number" id="age" class="form-control" :class="{ 'is-invalid': ageError }" placeholder="Enter age" />
           <div v-if="ageError" class="invalid-feedback">{{ ageError }}</div>
         </div>
 
+        <!-- Update Button -->
         <button @click="showUpdateConfirmation" class="btn btn-primary mb-2">Update Account</button>
 
+        <!-- Update Confirmation Dialog -->
         <v-dialog v-model="dialogUpdate" max-width="500px">
           <v-card>
             <v-card-title>Update Confirmation</v-card-title>
@@ -31,12 +29,13 @@
               Are you sure you want to update the data?
             </v-card-text>
             <v-card-actions>
-              <v-btn  @click="cancelUpdate">No</v-btn>
+              <v-btn @click="cancelUpdate">No</v-btn>
               <v-btn color="error" @click="confirmUpdate">Yes</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
 
+        <!-- Success and Error Messages -->
         <div v-if="accountUpdated" class="alert alert-success mt-2">
           Account updated successfully!
         </div>
@@ -50,6 +49,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { ref, watch, onMounted, computed } from 'vue';

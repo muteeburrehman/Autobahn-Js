@@ -22,7 +22,20 @@
           <div v-if="ageError" class="invalid-feedback">{{ ageError }}</div>
         </div>
 
-        <button @click="updateAccount" class="btn btn-primary mb-2">Update Account</button>
+        <button @click="showUpdateConfirmation" class="btn btn-primary mb-2">Update Account</button>
+
+        <v-dialog v-model="dialogUpdate" max-width="500px">
+          <v-card>
+            <v-card-title>Update Confirmation</v-card-title>
+            <v-card-text>
+              Are you sure you want to update the data?
+            </v-card-text>
+            <v-card-actions>
+              <v-btn  @click="cancelUpdate">No</v-btn>
+              <v-btn color="error" @click="confirmUpdate">Yes</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
         <div v-if="accountUpdated" class="alert alert-success mt-2">
           Account updated successfully!
@@ -59,22 +72,19 @@ export default {
     const accountUpdated = ref(false);
     const showErrorMessage = ref(false);
     const errorMessage = ref('');
+    const dialogUpdate = ref(false);
 
-    // Use computed to get the email parameter from the route
     const userEmail = computed(() => router.currentRoute.value.params.email);
 
     const getUserData = async (email) => {
       try {
-        // Check if store.state.session is defined before making the API call
         if (!store.state.session) {
           console.error('Session is not initialized. Please try again later.');
           return;
         }
 
-        // Make the API call to get user data based on the email parameter
         const res = await store.state.session.call('pk.codebase.account.get', [email.trim()]);
 
-        // Update accountData with the received data
         accountData.value = {
           fullname: res.fullname,
           age: res.age,
@@ -108,13 +118,9 @@ export default {
       try {
         const { fullname, age, email } = accountData.value;
 
-        // WAMP call for updating an account
         const res = await store.state.session.call('pk.codebase.account.update', [email, fullname, age]);
         console.log('Account updated successfully:', res);
         accountUpdated.value = true;
-
-        // Redirect to ShowUsersPage after successfully creating an account
-        router.push({ name: 'show-users' });
       } catch (error) {
         errorMessage.value = 'Error updating account. Please try again.';
         showErrorMessage.value = true;
@@ -157,11 +163,25 @@ export default {
       }
     };
 
-    // Use onMounted instead of the mounted lifecycle hook
+    const showUpdateConfirmation = () => {
+      dialogUpdate.value = true;
+    };
+
+    const confirmUpdate = () => {
+      dialogUpdate.value = false;
+      updateAccount().then(() => {
+        router.push({ name: 'show-users' });
+      });
+    };
+
+    const cancelUpdate = () => {
+      dialogUpdate.value = false;
+    };
+
     onMounted(() => {
-      // Call getUserData with the computed userEmail
       getUserData(userEmail.value);
     });
+
     watch(() => store.state.connected, (newConnected) => {
       if (!newConnected) {
         fullnameError.value = '';
@@ -184,6 +204,10 @@ export default {
       updateAccount,
       userEmail,
       store,
+      dialogUpdate,
+      showUpdateConfirmation,
+      confirmUpdate,
+      cancelUpdate,
     };
   },
 };
